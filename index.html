@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MeetCost Calc | Real-Time Meeting Cost Tracking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#45464d",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-background": "#1b1b1d",
+                        "inverse-surface": "#303032",
+                        "background": "#fcf8fa",
+                        "on-tertiary-fixed": "#0d1c2e",
+                        "secondary": "#006c4a",
+                        "outline": "#76777d",
+                        "on-surface": "#1b1b1d",
+                        "tertiary": "#000000",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c6c6cd",
+                        "on-secondary-container": "#00714e",
+                        "tertiary-fixed-dim": "#b9c7df",
+                        "on-tertiary-container": "#77859a",
+                        "surface-container-high": "#eae7e9",
+                        "on-secondary-fixed-variant": "#005137",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-dim": "#dcd9db",
+                        "surface-container-low": "#f6f3f5",
+                        "secondary-container": "#82f5c1",
+                        "surface-variant": "#e4e2e4",
+                        "on-primary-container": "#7c839b",
+                        "primary": "#000000",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#68dba9",
+                        "surface-tint": "#565e74",
+                        "tertiary-fixed": "#d5e3fc",
+                        "on-error-container": "#93000a",
+                        "surface": "#fcf8fa",
+                        "on-tertiary-fixed-variant": "#3a485b",
+                        "on-primary-fixed": "#131b2e",
+                        "surface-container-highest": "#e4e2e4",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#f0edef",
+                        "inverse-on-surface": "#f3f0f2",
+                        "surface-bright": "#fcf8fa",
+                        "primary-container": "#131b2e",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#dae2fd",
+                        "secondary-fixed": "#85f8c4",
+                        "on-secondary-fixed": "#002114",
+                        "inverse-primary": "#bec6e0",
+                        "tertiary-container": "#0d1c2e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "2xl": "48px",
+                        "container-max": "1280px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "3xl": "64px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "numeric-data": ["Inter"],
+                        "display-h1": ["Plus Jakarta Sans"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h2": ["Plus Jakarta Sans"],
+                        "display-h1-mobile": ["Plus Jakarta Sans"],
+                        "h3": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "numeric-data": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "display-h1": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "h2": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-h1-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "h3": ["24px", {"lineHeight": "32px", "letterSpacing": "0", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md flex justify-between items-center px-lg py-sm border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<span class="font-display-h1 text-h3 text-on-background">MeetCost Calc</span>
+</div>
+<nav class="hidden md:flex items-center gap-xl">
+<a class="text-secondary border-b-2 border-secondary font-bold pb-1 transition-colors" href="#">Features</a>
+<a class="text-on-surface-variant font-body-md hover:text-secondary transition-colors" href="#">Calculator</a>
+<a class="text-on-surface-variant font-body-md hover:text-secondary transition-colors" href="#">Integrations</a>
+</nav>
+<div class="flex items-center">
+<button class="bg-secondary text-on-secondary px-lg py-sm rounded-lg font-label-md hover:opacity-90 active:scale-95 transition-all">Get Early Access</button>
+</div>
+</header>
+<main class="pt-[72px]">
+<!-- Section 1: Hero Section -->
+<section class="relative overflow-hidden px-lg py-3xl max-w-container-max mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-2xl items-center">
+<div class="flex flex-col gap-lg">
+<div class="inline-flex">
+<span class="bg-secondary-container text-on-secondary-container px-md py-1 rounded-full font-label-md">
+                            Operational Efficiency for SMEs
+                        </span>
+</div>
+<h1 class="font-display-h1 text-display-h1-mobile md:text-display-h1 text-on-background max-w-xl">
+                        Stop Burning Money in Meetings. Start Tracking Real Productivity.
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
+                        Finally, turn 'meeting bloat' into an operational metric with real-time cost visibility.
+                    </p>
+<form class="flex flex-col sm:flex-row gap-base max-w-lg">
+<input class="flex-grow px-lg py-md rounded-lg border border-outline-variant focus:ring-2 focus:ring-secondary focus:ring-offset-1 outline-none font-body-md" placeholder="Enter work email" type="email"/>
+<button class="bg-secondary text-on-secondary px-xl py-md rounded-lg font-label-md hover:opacity-90 active:scale-95 transition-all whitespace-nowrap" data-tracking-id="hero-email-submit" type="submit">
+                            Start Tracking Meeting ROI for Free
+                        </button>
+</form>
+</div>
+<div class="relative">
+<div class="glass-card border border-outline-variant rounded-xl p-lg shadow-sm relative z-10">
+<div class="flex items-center justify-between mb-xl">
+<h3 class="font-h3 text-on-background">Live Labor Analysis</h3>
+<span class="material-symbols-outlined text-secondary">trending_up</span>
+</div>
+<div class="space-y-xl">
+<div class="flex items-center justify-between p-md bg-surface-container rounded-lg border border-outline-variant">
+<div>
+<p class="font-label-md text-on-surface-variant mb-1">Total Meeting Labor Cost</p>
+<h2 class="font-h2 text-primary font-numeric-data">$12,480</h2>
+</div>
+<div class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">monetization_on</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-md bg-surface-container rounded-lg border border-outline-variant">
+<div>
+<p class="font-label-md text-on-surface-variant mb-1">Avg. Cost Per Recurring Meeting</p>
+<h2 class="font-h2 text-primary font-numeric-data">$850 <span class="text-body-sm font-normal">/ hr</span></h2>
+</div>
+<span class="bg-error-container text-on-error-container px-md py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                                    High Cost Alert
+                                </span>
+</div>
+</div>
+</div>
+<!-- Decorative back elements -->
+<div class="absolute -top-10 -right-10 w-64 h-64 bg-secondary/5 rounded-full blur-3xl -z-10"></div>
+<div class="absolute -bottom-10 -left-10 w-48 h-48 bg-primary/5 rounded-full blur-2xl -z-10"></div>
+</div>
+</div>
+</section>
+<!-- Section 2: Interactive Meeting Cost Preview -->
+<section class="bg-surface-container-low py-3xl px-lg">
+<div class="max-w-3xl mx-auto text-center flex flex-col gap-xl">
+<div class="flex flex-col gap-md">
+<h2 class="font-h2 text-on-background">Calculate Your Team's Wasted Meeting Spend</h2>
+<p class="text-on-surface-variant font-body-md">Adjust the parameters to estimate the financial impact of your weekly meeting schedule.</p>
+</div>
+<div class="bg-surface border border-outline-variant rounded-xl p-2xl shadow-sm text-left">
+<div class="space-y-xl mb-2xl">
+<div class="flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-on-surface">Team Size</label>
+<span class="font-numeric-data text-secondary font-bold" id="team-val">50 members</span>
+</div>
+<input class="w-full accent-secondary" max="200" min="5" oninput="updateCalc()" type="range" value="50"/>
+</div>
+<div class="flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-on-surface">Average Hourly Rate ($)</label>
+<span class="font-numeric-data text-secondary font-bold" id="rate-val">$75 / hr</span>
+</div>
+<input class="w-full accent-secondary" max="150" min="30" oninput="updateCalc()" type="range" value="75"/>
+</div>
+<div class="flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-on-surface">Meetings (Hours / Week)</label>
+<span class="font-numeric-data text-secondary font-bold" id="hours-val">10 hours</span>
+</div>
+<input class="w-full accent-secondary" max="20" min="1" oninput="updateCalc()" type="range" value="10"/>
+</div>
+</div>
+<div class="pt-xl border-t border-outline-variant flex flex-col items-center gap-lg">
+<div class="text-center">
+<p class="font-label-md text-on-surface-variant uppercase tracking-widest mb-1">Estimated Annual Meeting Labor Cost</p>
+<h2 class="font-display-h1 text-tertiary-container font-numeric-data" id="total-cost">$1,950,000</h2>
+</div>
+<button class="bg-secondary text-on-secondary px-2xl py-md rounded-lg font-label-md hover:opacity-90 active:scale-95 transition-all flex items-center gap-md" data-tracking-id="calculator-connect-cta">
+<span class="material-symbols-outlined">calendar_today</span>
+                            Connect Calendar to See Your Real Number
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Problem vs. Solution Card Grid -->
+<section class="py-3xl px-lg max-w-container-max mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Card 1 -->
+<div class="group border border-outline-variant rounded-xl p-xl hover:border-secondary transition-colors duration-300">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center mb-xl group-hover:bg-secondary/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary">visibility_off</span>
+</div>
+<h3 class="font-h3 mb-md">Invisible Bloat</h3>
+<div class="space-y-md">
+<div class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-error text-sm mt-1">remove_circle</span>
+<p class="font-body-md text-on-surface-variant">Thousands in labor costs with zero tracking or accountability trail.</p>
+</div>
+<div class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-secondary text-sm mt-1">check_circle</span>
+<p class="font-body-md text-on-surface">Real-time cost data directly layered onto your GCal interface.</p>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group border border-outline-variant rounded-xl p-xl hover:border-secondary transition-colors duration-300">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center mb-xl group-hover:bg-secondary/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary">query_stats</span>
+</div>
+<h3 class="font-h3 mb-md">Unjustified Time</h3>
+<div class="space-y-md">
+<div class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-error text-sm mt-1">remove_circle</span>
+<p class="font-body-md text-on-surface-variant">Inability to prove meeting ROI to leadership or finance teams.</p>
+</div>
+<div class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-secondary text-sm mt-1">check_circle</span>
+<p class="font-body-md text-on-surface">Automated weekly efficiency reports sent to every manager.</p>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group border border-outline-variant rounded-xl p-xl hover:border-secondary transition-colors duration-300">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center mb-xl group-hover:bg-secondary/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary">account_balance_wallet</span>
+</div>
+<h3 class="font-h3 mb-md">Inefficient Capital</h3>
+<div class="space-y-md">
+<div class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-error text-sm mt-1">remove_circle</span>
+<p class="font-body-md text-on-surface-variant">High-value staff spending 15+ hours weekly in status checks.</p>
+</div>
+<div class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-secondary text-sm mt-1">check_circle</span>
+<p class="font-body-md text-on-surface">Smart analytics to cut or shorten meetings with poor engagement.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Features -->
+<section class="py-3xl px-lg bg-surface-container">
+<div class="max-w-container-max mx-auto space-y-3xl">
+<!-- Block 1 -->
+<div class="flex flex-col md:flex-row gap-2xl items-center">
+<div class="flex-1 space-y-lg">
+<h2 class="font-h2 text-on-background">Secure Google Calendar &amp; HR API Synchronization</h2>
+<p class="font-body-lg text-on-surface-variant">Sync meeting duration data with actual salary bands securely. We never store individual salary data—only anonymized aggregate metrics for your reporting.</p>
+<div class="flex flex-wrap gap-md">
+<button class="inline-flex items-center gap-md px-lg py-md border border-outline-variant rounded-lg bg-surface hover:bg-surface-container-highest transition-colors font-label-md" data-tracking-id="connect-gusto">
+<span class="material-symbols-outlined text-secondary">sync</span>
+                                Connect Gusto
+                            </button>
+<button class="inline-flex items-center gap-md px-lg py-md border border-outline-variant rounded-lg bg-surface hover:bg-surface-container-highest transition-colors font-label-md" data-tracking-id="connect-bamboohr">
+<span class="material-symbols-outlined text-secondary">sync</span>
+                                Connect BambooHR
+                            </button>
+</div>
+</div>
+<div class="flex-1 w-full">
+<div class="bg-surface rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<div class="p-md bg-surface-container-high border-b border-outline-variant flex gap-base">
+<div class="w-3 h-3 rounded-full bg-error/20"></div>
+<div class="w-3 h-3 rounded-full bg-secondary-container"></div>
+<div class="w-3 h-3 rounded-full bg-outline-variant"></div>
+</div>
+<div class="p-xl space-y-md">
+<div class="flex justify-between items-center text-xs font-label-md text-on-surface-variant uppercase tracking-widest">
+<span>Sync Status</span>
+<span class="text-secondary flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span> Encrypted</span>
+</div>
+<div class="h-8 w-full bg-surface-container-low rounded animate-pulse"></div>
+<div class="h-8 w-3/4 bg-surface-container-low rounded animate-pulse"></div>
+<div class="h-8 w-5/6 bg-surface-container-low rounded animate-pulse"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Block 2 -->
+<div class="flex flex-col md:flex-row-reverse gap-2xl items-center">
+<div class="flex-1 space-y-lg">
+<h2 class="font-h2 text-on-background">Automated Real-Time Cost Calculator Dashboard</h2>
+<p class="font-body-lg text-on-surface-variant">See the ticker move during every meeting. Create a culture of time-respect by showing the financial impact of every added attendee in real-time.</p>
+<ul class="space-y-md">
+<li class="flex items-center gap-md font-body-md">
+<span class="material-symbols-outlined text-secondary">check</span> Instant "Cost-to-Join" estimates
+                            </li>
+<li class="flex items-center gap-md font-body-md">
+<span class="material-symbols-outlined text-secondary">check</span> Departmental budget allocation tracking
+                            </li>
+</ul>
+</div>
+<div class="flex-1 w-full">
+<div class="p-2xl bg-gradient-to-br from-tertiary-container to-on-tertiary-container/20 rounded-xl relative overflow-hidden">
+<div class="relative z-10 space-y-lg">
+<div class="bg-white/10 backdrop-blur-md rounded-lg p-md border border-white/20">
+<p class="text-white/60 text-xs mb-1 uppercase">Meeting in Progress</p>
+<div class="flex justify-between items-end">
+<h3 class="text-white font-h3">Weekly QBR</h3>
+<span class="text-secondary-fixed font-numeric-data font-bold">$1,240.45</span>
+</div>
+<div class="w-full bg-white/10 h-1 mt-md rounded-full overflow-hidden">
+<div class="bg-secondary-fixed h-full w-2/3"></div>
+</div>
+</div>
+<div class="flex gap-md">
+<div class="flex-1 bg-white/10 backdrop-blur-md rounded-lg p-md border border-white/20">
+<p class="text-white/60 text-xs">Attendees</p>
+<p class="text-white font-bold">12</p>
+</div>
+<div class="flex-1 bg-white/10 backdrop-blur-md rounded-lg p-md border border-white/20">
+<p class="text-white/60 text-xs">Projected</p>
+<p class="text-white font-bold">$1,850</p>
+</div>
+</div>
+</div>
+<div class="absolute top-0 right-0 p-lg">
+<span class="material-symbols-outlined text-white/10 text-9xl">analytics</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Block 3 -->
+<div class="flex flex-col md:flex-row gap-2xl items-center">
+<div class="flex-1 space-y-lg">
+<h2 class="font-h2 text-on-background">Weekly Meeting Efficiency Reporting for Managers</h2>
+<p class="font-body-lg text-on-surface-variant">Get a digest of "Dead Zones"—time slots where meetings are least productive—and "Gold Mine" hours to protect for deep work.</p>
+<button class="text-secondary font-label-md flex items-center gap-sm group">
+                            Explore Manager Digest <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+<div class="flex-1 w-full">
+<div class="bg-surface rounded-xl border border-outline-variant p-xl shadow-sm">
+<div class="w-full h-64 bg-cover bg-center rounded-lg border border-outline-variant" data-alt="A clean, professional digital dashboard interface showing weekly meeting efficiency metrics, featuring bar charts and line graphs in emerald and navy. The aesthetic is enterprise-ready, minimalist, and highly legible with soft gray backgrounds and sharp data visualizations." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCczLxmJittrjrf4v-f5VXteAxRgE4zAyuAuceHnUw6ikEn5crPQHXHdpz1g8LrcBAJEC5WDlvbhdTLjJv0-DE5m-RAosja8gJ_Y8jXVKN6WEQt1EJVX6M-2KhrZLENClf_mEtBEzm8iIB651Tr9ojrB2jW2hQhuu9d7sgCDLDJ0JB52ZgQCypnT6a8k_l_N-M9Wg5v8QRB08MhtMwAvw0IDT5j_eU-uYKQ7AjbpyPjhhzEzX575eOAjhuTUOm-eE1C-PjIunWpF8A')"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5: Social Proof -->
+<section class="py-3xl px-lg max-w-container-max mx-auto overflow-hidden">
+<h2 class="font-h2 text-center mb-2xl">Trusted by Operational Leaders</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
+<div class="bg-surface-container-low p-2xl rounded-xl border border-outline-variant relative">
+<span class="material-symbols-outlined text-secondary/20 text-6xl absolute top-6 right-6">format_quote</span>
+<div class="space-y-lg relative z-10">
+<p class="font-body-lg italic text-on-surface">"MeetCost Calc changed how our executive team views 'quick updates.' We've reduced our meeting hours by 22% in the first quarter alone, saving nearly $40k in unallocated labor."</p>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of Sarah M., a mid-30s female HR lead with a friendly yet authoritative expression. Bright, soft office lighting, modern corporate background with blurred plants and glass partitions. Professional attire in muted tones." src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+</div>
+<div>
+<p class="font-label-md text-on-surface">Sarah M.</p>
+<p class="text-xs text-on-surface-variant uppercase tracking-tighter">HR Lead, FinTech Solutions</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-2xl rounded-xl border border-outline-variant relative">
+<span class="material-symbols-outlined text-secondary/20 text-6xl absolute top-6 right-6">format_quote</span>
+<div class="space-y-lg relative z-10">
+<p class="font-body-lg italic text-on-surface">"Finally, a tool that speaks the language of the CFO. The real-time cost visibility in calendar invites is the most effective behavioral nudge I've seen in operations."</p>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of David K., a VP of Operations in his late 40s. Sophisticated, minimalist office setting with warm architectural lighting. He wears a tailored navy blazer, looking confident and experienced. High-end business portrait style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDePbjZFfG3jHLzIvofSSNHz549GWlBh1Q4SB8-g5hPtHFakc9vW-0of0tcQA5AwNTdS0VZ_1Na5TghLERK3_MaTQo1XW3NEZkylioh2thD1zpg4MPL1kq3tQuI0skuDuGJGdyYAl6zJn4RL9t2U-WJs5OWamtbtMPhupXURACNu53cV_61-MUbLR8etCtgci1_en_C3iLuOzzcmqU5hFEzYC_F7Z_OEfsNQZiS03SjmFreoC23Pl4WMy0NaAH1244-w3lIvYTY0-k"/>
+</div>
+<div>
+<p class="font-label-md text-on-surface">David K.</p>
+<p class="text-xs text-on-surface-variant uppercase tracking-tighter">VP Operations, Nexus Growth</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 6: Final CTA -->
+<section class="mx-lg mb-3xl">
+<div class="max-w-container-max mx-auto bg-tertiary-container rounded-2xl p-3xl relative overflow-hidden text-center flex flex-col items-center gap-xl">
+<!-- Background visual effect -->
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+
+</div>
+<div class="relative z-10 space-y-md max-w-2xl">
+<h2 class="font-display-h1 text-white">Stop Burning Salary on Status Meetings.</h2>
+<p class="font-body-lg text-white/70">Join 400+ modern companies quantifying their meeting culture and recovering thousands in productive hours.</p>
+</div>
+<form class="relative z-10 flex flex-col sm:flex-row gap-base w-full max-w-lg">
+<input class="flex-grow px-lg py-md rounded-lg bg-white border-transparent focus:ring-2 focus:ring-secondary outline-none font-body-md text-on-surface" placeholder="work@company.com" type="email"/>
+<button class="bg-secondary text-on-secondary px-xl py-md rounded-lg font-label-md hover:opacity-90 active:scale-95 transition-all whitespace-nowrap" data-tracking-id="bottom-email-submit" type="submit">
+                        Start Tracking Meeting ROI for Free
+                    </button>
+</form>
+<p class="relative z-10 text-white/40 text-xs font-label-md uppercase tracking-widest">No credit card required • 14-day free trial</p>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-outline-variant">
+<div class="max-w-container-max mx-auto px-lg py-2xl grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="col-span-1 md:col-span-1 flex flex-col gap-md">
+<span class="font-display-h1 text-h3 text-on-background">MeetCost Calc</span>
+<p class="text-on-surface-variant font-body-sm max-w-xs">
+                    Precise financial accountability for modern operations. Turning calendars into assets since 2024.
+                </p>
+</div>
+<div>
+<h4 class="font-label-md text-on-surface mb-lg">Product</h4>
+<ul class="space-y-sm">
+<li><a class="text-on-surface-variant font-body-sm hover:text-secondary transition-colors" href="#">Pricing</a></li>
+<li><a class="text-on-surface-variant font-body-sm hover:text-secondary transition-colors" href="#">Integrations</a></li>
+<li><a class="text-on-surface-variant font-body-sm hover:text-secondary transition-colors" href="#">Enterprise</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-on-surface mb-lg">Support</h4>
+<ul class="space-y-sm">
+<li><a class="text-on-surface-variant font-body-sm hover:text-secondary transition-colors" href="#">Contact Us</a></li>
+<li><a class="text-on-surface-variant font-body-sm hover:text-secondary transition-colors" href="#">Security</a></li>
+<li><a class="text-on-surface-variant font-body-sm hover:text-secondary transition-colors" href="#">Status</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-on-surface mb-lg">Legal</h4>
+<ul class="space-y-sm">
+<li><a class="text-on-surface-variant font-body-sm hover:text-secondary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-on-surface-variant font-body-sm hover:text-secondary transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-lg py-md border-t border-outline-variant/50">
+<p class="text-on-surface-variant font-body-sm text-center">
+                © 2024 MeetCost Calc. All rights reserved. Precise financial accountability for modern operations.
+            </p>
+</div>
+</footer>
+<script>
+        function updateCalc() {
+            const team = document.querySelectorAll('input[type="range"]')[0].value;
+            const rate = document.querySelectorAll('input[type="range"]')[1].value;
+            const hours = document.querySelectorAll('input[type="range"]')[2].value;
+
+            document.getElementById('team-val').textContent = team + ' members';
+            document.getElementById('rate-val').textContent = '$' + rate + ' / hr';
+            document.getElementById('hours-val').textContent = hours + ' hours';
+
+            // Annual cost = Team * Rate * Hours * 52 weeks
+            const total = team * rate * hours * 52;
+            document.getElementById('total-cost').textContent = '$' + total.toLocaleString();
+        }
+
+        // Initialize calc
+        updateCalc();
+
+        // Simple observer for reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-4');
+            observer.observe(section);
+        });
+    </script>
+</body></html>
